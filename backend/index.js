@@ -230,11 +230,20 @@ app.post('/questions/:questionID/answer',authenticateJWT,async(req,res)=>{
             question:questionId
         })
 
+        await newAnswer.save();
+        question.answer.push(newAnswer._id);
+        await question.save();
+
+        res.status(201).json({
+            message: "Answer submitted successfully", answer: newAnswer 
+        })
+
+
 
         
 
     }catch{
-
+        res.status(500).json({ message: "Internal server error", error: error.message });
     }
 })
 
