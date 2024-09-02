@@ -34,15 +34,23 @@ const QuestionSchema = new mongoose.Schema({
   tags:[String],
   questionText: { type: String, required: true },
   author: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
+  answer:[{type:mongoose.Schema.Types.ObjectId,ref:'Answer',required:true}],
   createdAt: { type: Date, default: Date.now }
 });
 
+const answerSchema= new mongoose.Schema({
+  answerText: {type:String , unique:true},
+  author :{type:mongoose.Schema.Types.ObjectId,ref:'User',required:'true'},
+  question: { type: mongoose.Schema.Types.ObjectId, ref: 'Question', required: true },
+  createdAt: { type: Date, default: Date.now }
+})
 // Define the models
 const User = mongoose.model('User', UserSchema);
 const Admin = mongoose.model('Admin', AdminSchema);
 const Question = mongoose.model('Question', QuestionSchema);
+const Answer = mongoose.model('Answer', answerSchema);
 
-export { User, Admin, Question };
+export { User, Admin, Question,Answer };
 
 // const UserSchema = new mongoose.Schema({
 //     id:{type:String,unique:true},

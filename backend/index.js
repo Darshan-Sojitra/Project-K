@@ -3,7 +3,7 @@ import mongodb from 'mongoose'
 import jwt from 'jsonwebtoken'
 import cors from 'cors'
 import {userinput} from './types.js'
-import { Admin, Question, User } from './db.js';
+import { Admin, Answer, Question, User } from './db.js';
 import { v4 as uuidv4 } from 'uuid';
 
 
@@ -182,4 +182,61 @@ app.get('/question',authenticateJWT, async (req, res) => {
 
 })
 
-app.listen(3000,()=>console.log("Running on port 3000"))
+app.get('/questions/:questionId', async (req, res) => {
+    try {
+        const question = await Question.findById(req.params.questionId).populate({
+            path: 'answers',
+            populate: { path: 'author', select: 'username' }  // Optionally populate the author details
+        });
+
+        if (!question) {
+            return res.status(404).json({ message: "Question not found" });
+        }
+
+        res.status(200).json(question);
+    } catch (error) {
+        res.status(500).json({ message: "Internal server error", error: error.message });
+    }
+});
+
+app.post('/questions/:questionID/answer',authenticateJWT,async(req,res)=>{
+    try{
+        const {answerText} = req.body;
+        const {questionId}= req.params;
+
+        if(!answerText){
+            return res.status(400).json({messsage:"Answer TExt is required"})
+        }
+        //
+        const question = await Question.findById(questionId);
+        if(!question){
+            return res.status(400).json({message:"Question was not found"})
+        } 
+
+        const user = await User.findOne({username:req.user.username});
+        const admin = await Admin.findOne({username:req.user.username});
+
+        if(!user && !admin){
+            return res.status(404).json({
+                message:"User or Admin not found"
+            })
+        }
+
+        const authorId = user? user._id :admin._id;
+
+        const newAnswer= new Answer ({
+            answerText:answerText,
+            author:authorId,
+            question:questionId
+        })
+
+
+        
+
+    }catch{
+
+    }
+})
+
+
+app.listen(3000,()=>console.log("Running on port 3000"));
