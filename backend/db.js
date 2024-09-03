@@ -30,13 +30,14 @@ const AdminSchema = new mongoose.Schema({
 
 // Define the schema for Questions
 const QuestionSchema = new mongoose.Schema({
-  id: { type: String, unique: true },  // Custom 'id' field
-  tags:[String],
+  id: { type: String, unique: true },
+  tags: [String],
   questionText: { type: String, required: true },
   author: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
-  answer:[{type:mongoose.Schema.Types.ObjectId,ref:'Answer',required:true}],
+  answer: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Answer' }],  // Ensure this matches
   createdAt: { type: Date, default: Date.now }
 });
+
 
 const answerSchema= new mongoose.Schema({
   answerText: {type:String , unique:true},

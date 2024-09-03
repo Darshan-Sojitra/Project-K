@@ -54,7 +54,7 @@ app.post('/admin/signup', async (req, res) => {
             });
         } else {
             const token = jwt.sign({ username, role: 'admin' }, SECRET, { expiresIn: "1h" });
-            const newadmin = await new Admin({ username: username, password: password, role: ROLES.ADMIN });
+            const newadmin = await new Admin({id: uuidv4(), username: username, password: password, role: ROLES.ADMIN });
             await newadmin.save();
 
 
@@ -182,10 +182,10 @@ app.get('/question',authenticateJWT, async (req, res) => {
 
 })
 
-app.get('/questions/:questionId', async (req, res) => {
+app.get('/questions/:questionId',authenticateJWT, async (req, res) => {
     try {
         const question = await Question.findById(req.params.questionId).populate({
-            path: 'answers',
+            path: 'answer',
             populate: { path: 'author', select: 'username' }  // Optionally populate the author details
         });
 
@@ -199,11 +199,11 @@ app.get('/questions/:questionId', async (req, res) => {
     }
 });
 
-app.post('/questions/:questionID/answer',authenticateJWT,async(req,res)=>{
+app.post('/questions/:questionId/answer',authenticateJWT,async(req,res)=>{
     try{
         const {answerText} = req.body;
-        const {questionId}= req.params;
-
+        const questionId= req.params.questionId;
+    
         if(!answerText){
             return res.status(400).json({messsage:"Answer TExt is required"})
         }
@@ -237,10 +237,6 @@ app.post('/questions/:questionID/answer',authenticateJWT,async(req,res)=>{
         res.status(201).json({
             message: "Answer submitted successfully", answer: newAnswer 
         })
-
-
-
-        
 
     }catch{
         res.status(500).json({ message: "Internal server error", error: error.message });
