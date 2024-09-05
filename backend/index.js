@@ -71,9 +71,9 @@ app.post('/admin/login', async (req, res) => {
     if (!parsedPayload.success) {
         res.status(411).json({
             message: "Invalid Input"
-        })
+        })  
     } else {
-        const admin = Admin.findOne({ username: username, password: password, role: ROLES.ADMIN })
+        const admin = await Admin.findOne({ username: username, password: password, role: ROLES.ADMIN })
         if (admin) {
             const token = jwt.sign({ username: username, role: ROLES.ADMIN }, SECRET, { expiresIn: '1h' })
             res.json({          
@@ -87,8 +87,8 @@ app.post('/admin/login', async (req, res) => {
     }
 })
 
-app.post('users/signup', async (req, res) => {
-    const { usernmae, password } = req.body;
+app.post('/users/signup', async (req, res) => {
+    const { username, password } = req.body;
     const payload = { username, password };
     const parsedParsed = userinput.safeParse(payload);
     if (!parsedParsed.success) {
@@ -103,7 +103,7 @@ app.post('users/signup', async (req, res) => {
             })
         } else {
             const token = jwt.sign({ username, role: 'user' }, SECRET, { expiresIn: "1h" });
-            const newUser = await new User({ username: username, password: password, role: ROLES.USER });
+            const newUser = await new User({id: uuidv4(), username: username, password: password, role: ROLES.USER });
             await newUser.save();
 
             res.json({
@@ -116,16 +116,29 @@ app.post('users/signup', async (req, res) => {
     }
 })
 
-app.post('/user/login', async (req, res) => {
+app.post('/users/login', async (req, res) => {
     const { username, password } = req.body;
     const payload = { username, password };
+    console.log(username,password)
     const parsedPayload = userinput.safeParse(payload);
     if (!parsedPayload.success) {
         res.status(411).json({ messgae: "Invalid Input" });
         return;
     } else {
-        const token = jwt.sign({ username: username, password: password }, SECRET, { expiresIn: "1h" });
-        res.json({ message: "USer was logged in successfully", token })
+        const user = await User.findOne({ username, password,})
+        
+        if (user) {
+            
+            const token = jwt.sign({ username: username, role: ROLES.USER }, SECRET, { expiresIn: '1h' })
+            return res.json({          
+                 message: "Users login successfully", token:token 
+            })
+        } else {
+            console.log("not")
+            return res.status(401).json({message: "invalid admin credentials"})
+            
+            
+        }
     }
 })
 
@@ -244,4 +257,4 @@ app.post('/questions/:questionId/answer',authenticateJWT,async(req,res)=>{
 })
 
 
-app.listen(3000,()=>console.log("Running on port 3000"));
+app.listen(3000,()=>console.log(`Running on port ${port}`));
