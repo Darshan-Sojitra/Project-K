@@ -1,0 +1,68 @@
+home-container-2{
+               margin-top: 30px;
+               padding-top: 50px 0px;
+}
+
+.pro{
+               margin-top: 60px;
+               margin-left: 10px;
+               padding: 15px;
+               justify-content: center;
+               text-align: center;
+               background-color:  #a8f3e0;
+}
+
+.pro h1{
+               font-weight: 700;
+}
+
+.pro p{
+               font-family: Arial, Helvetica, sans-serif;
+               color: rgb(5, 5, 27);
+               font-weight: 400;
+               padding: 10px;
+               border-radius: 4px;
+               background-color: rgb(96, 216, 237);
+               cursor: pointer;
+}
+
+.pro p:hover{
+               background-color: rgb(2, 5, 7);
+               color: azure;
+}
+
+
+.with-us{
+               display: flex;
+               justify-content:space-evenly;
+               text-align: center;
+}
+
+.with-us p{
+               padding: 10px;
+               background-color: rgb(10, 107, 145);
+               cursor: pointer;
+}
+.with-us p:hover{
+              
+               background-color: rgb(2, 5, 7);
+               color: azure;
+}
+
+
+ .pro .achiev-3 p:hover{
+               
+               background-color: rgb(2, 5, 7);
+               color: azure;
+}
+
+@media screen and (max-width: 1000px){
+               home-container-2{
+                              width: 200px;
+               }
+
+               .pro{
+                              width: 120%;
+                              margin: 10% 0%;
+               }
+}

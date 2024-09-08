@@ -33,6 +33,7 @@ const QuestionSchema = new mongoose.Schema({
   id: { type: String, unique: true },
   tags: [String],
   questionText: { type: String, required: true },
+  questiondes:{type:String, required:true},
   author: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
   answer: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Answer' }],  // Ensure this matches
   createdAt: { type: Date, default: Date.now }

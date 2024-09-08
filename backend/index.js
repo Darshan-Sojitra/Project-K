@@ -145,7 +145,7 @@ app.post('/users/login', async (req, res) => {
 
 app.post('/newquestion', authenticateJWT, async (req, res) => {
     try {
-        const { questionText , tags} = req.body;
+        const {questiondes, questionText , tags} = req.body;
 
         if (!questionText) {
             return res.status(400).json({ message: "Question text is required" });
@@ -169,6 +169,7 @@ app.post('/newquestion', authenticateJWT, async (req, res) => {
             id: uuidv4(),
             tags:tags,
             questionText: questionText,
+            questiondes: questiondes,
             author: authorId
         });
 
