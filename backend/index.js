@@ -199,11 +199,11 @@ app.get('/question',authenticateJWT, async (req, res) => {
 app.get('/questions/:questionId',authenticateJWT, async (req, res) => {
     try {
         const question = await Question.findById(req.params.questionId).populate({
-            path: 'answer',
+            path: 'answer', 
             populate: { path: 'author', select: 'username' }  // Optionally populate the author details
         });
 
-        if (!question) {
+        if (!question) { 
             return res.status(404).json({ message: "Question not found" });
         }
 
